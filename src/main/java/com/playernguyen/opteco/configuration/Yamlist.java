@@ -5,10 +5,7 @@ import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Scanner;
 
 public abstract class Yamlist<T extends Flagable> {
@@ -42,22 +39,20 @@ public abstract class Yamlist<T extends Flagable> {
         if (!_parent.exists() && !_parent.mkdir())
             throw new NullPointerException("Parent directory not found");
         // Load and children
-        InputStream resource = OptEco.getInstance().getResource(localFile);
+        InputStream resource = optEco.getResource(localFile);
         if (resource == null) {
             throw new NullPointerException(String.format("Cannot found file %s in /resources", localFile));
         }
         // Initial file and put it into
         this.file = new File(_parent, localFile);
-        Scanner scanner = new Scanner(resource);
-        FileWriter writer = new FileWriter(file);
-        // Write a song :D
-        while (scanner.hasNext()) {
-            writer.write(scanner.next());
+        if (!file.exists()) {
+            if (file.createNewFile()) {
+                this.writeFileFromInputStream(optEco, resource);
+            }
         }
         // Now load this configuration
         this.fileConfiguration = YamlConfiguration.loadConfiguration(this.file);
 
-        save();
     }
 
     private File getFile() {
@@ -74,6 +69,27 @@ public abstract class Yamlist<T extends Flagable> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void writeFileFromInputStream(OptEco optEco, InputStream resource) throws IOException {
+        Scanner scanner = new Scanner(resource);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            // Write a song :D
+            while (scanner.hasNextLine()) {
+                String next = scanner.nextLine().replace("%version%", optEco.getDescription().getVersion());
+                writer.write(next + System.lineSeparator());
+            }
+            writer.flush();
+        }
+    }
+
+    public Object get(T flag) {
+        return getFileConfiguration()
+                .get(flag.getPath());
+    }
+
+    public String getString(T flag) {
+        return (String) get(flag);
     }
 
 }

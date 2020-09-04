@@ -1,3 +1,55 @@
 # This is configuration of OptEco
 # Auto-generate at version %version%
-Settings:
+# You might need this:
+# - GitHub: https://github.com/PlayerNguyen/OptEco
+# - SpigotMC: https://www.spigotmc.org/resources/opteco-1-8-1-15-2-placeholderapi-mysql-sqlite-support-api-web-integration-points-system.76179/
+
+
+# Storage settings
+# Storage type, use to store account information, transaction, data...
+# This can be: SQLite, MySQL
+StorageType: SQLite
+
+# SQL settings
+SQL:
+
+  # SQL Table Setting
+  Table:
+    # This is the prefix of table
+    # using for forum or another stuff
+    #
+    # Use '' for not prefix. But I recommend that
+    # you should set to 'opteco_' for the best settings
+    Prefix: 'opteco_'
+    # Account table name
+    # to use for the list
+    Account: 'account'
+  # MySQL Setting data
+  # Change this if you are using MySQL to storage data
+  MySQL:
+    # Host of MySQL Server
+    # Default: 'localhost'
+    Host: 'localhost'
+
+    # Username of MySQL Server
+    # Default: 'root'
+    Username: 'root'
+
+    # Password of MySQL Server
+    # Default: ''
+    Password: ''
+
+    # Port of MySQL Server
+    # Default: '3306'
+    Port: '3306'
+
+    # Database of MySQL Server
+    # Default: 'OptEco'
+    Database: 'OptEco'
+
+  SQLite:
+    File: 'database.sqlite'
+
+
+# Not this!! Debug mode, just for developer !!!
+Debug: false
