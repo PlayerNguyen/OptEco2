@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+    id "com.github.johnrengelman.shadow" version "6.0.0"
 }
 
 group 'com.playernguyen'
@@ -8,22 +8,19 @@ version '2.0'
 
 repositories {
     mavenCentral()
-
-    /*
-   As Spigot-API depends on the Bungeecord ChatComponent-API,
-  we need to add the Sonatype OSS repository, as Gradle,
-  in comparison to maven, doesn't want to understand the ~/.m2
-  directory unless added using mavenLocal(). Maven usually just gets
-  it from there, as most people have run the BuildTools at least once.
-  This is therefore not needed if you're using the full Spigot/CraftBukkit,
-  or if you're using the Bukkit API.
-  */
     maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
 }
 
+shadowJar {
+    dependencies {
+        exclude('org.xerial:sqlite-jdbc:3.7.2')
+    }
+}
+
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
+    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.7.2'
 }
