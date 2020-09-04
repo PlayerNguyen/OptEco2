@@ -17,6 +17,7 @@ public enum  OptEcoSettingFlag implements Flagable {
 
     SQL_SQLITE_FILENAME("SQL.SQLite.File", "database.sqlite"),
 
+    UPDATER_UPDATER("Updater", true),
     DEBUG_DEBUG("Debug", false),
     ;
 

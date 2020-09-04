@@ -46,10 +46,12 @@ SQL:
     # Database of MySQL Server
     # Default: 'OptEco'
     Database: 'OptEco'
-
   SQLite:
     File: 'database.sqlite'
 
-
+# The updater will find new update on everytime you start your server.
+# Maintain this enable to keep your server stabilize.
+# Default: true
+Updater: true
 # Not this!! Debug mode, just for developer !!!
 Debug: false

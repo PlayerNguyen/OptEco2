@@ -7,13 +7,20 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
 import java.util.Scanner;
+import java.util.Set;
 
 public abstract class Yamlist<T extends Flagable> {
 
-    private final File file;
-    private final FileConfiguration fileConfiguration;
+    private final String parent;
+    private final String name;
+    private File file;
+    private FileConfiguration fileConfiguration;
+    private final OptEco optEco;
 
     public Yamlist(OptEco optEco, String name, T[] flagables, boolean save, String parent) {
+        this.optEco = optEco;
+        this.name = name;
+        this.parent = parent;
         // Load parent
         File _parent = new File(optEco.getDataFolder(), parent);
         if (!_parent.exists() && !_parent.mkdir())
@@ -33,8 +40,16 @@ public abstract class Yamlist<T extends Flagable> {
         if (save) save();
     }
 
-    public Yamlist(OptEco optEco, String localFile, String parent) throws IOException {
+    public Yamlist(OptEco optEco, String name, String parent) throws IOException {
+        this.optEco = optEco;
+        this.name = name;
+        this.parent = parent;
         // Load parent
+        load(name, parent);
+
+    }
+
+    private void load(String localFile, String parent) throws IOException {
         File _parent = new File(optEco.getDataFolder(), parent);
         if (!_parent.exists() && !_parent.mkdir())
             throw new NullPointerException("Parent directory not found");
@@ -52,7 +67,6 @@ public abstract class Yamlist<T extends Flagable> {
         }
         // Now load this configuration
         this.fileConfiguration = YamlConfiguration.loadConfiguration(this.file);
-
     }
 
     private File getFile() {
@@ -83,7 +97,46 @@ public abstract class Yamlist<T extends Flagable> {
         }
     }
 
+    /**
+     *
+     * @throws IOException Cannot save the file
+     */
+    private void reimport(String localName, String parent) throws IOException {
+        // Save old setting
+        File _file = new File(optEco.getDataFolder(), "temp_save.yml");
+        FileConfiguration configuration = YamlConfiguration.loadConfiguration(_file);
+        Set<String> keys = this.getFileConfiguration().getKeys(true);
+        keys.forEach(e-> configuration.set(e, getFileConfiguration().get(e)));
+        configuration.save(_file);
+
+        // Remove old setting
+        if (!this.file.delete()) {
+            throw new IllegalStateException("Cannot delete config file.");
+        }
+
+        // Create new one
+        load(localName, parent);
+
+        // Set the stores
+        Set<String> tempKeys = configuration.getKeys(true);
+        tempKeys.forEach(e -> this.fileConfiguration.set(e, configuration.get(e)));
+        save();
+
+        // Remove the store
+        if (!_file.delete()) {
+            throw new IllegalStateException("Cannot delete temporarily file.");
+        }
+
+    }
+
     public Object get(T flag) {
+        if (!getFileConfiguration().contains(flag.getPath())) {
+            try {
+                reimport(name, parent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return getFileConfiguration()
                 .get(flag.getPath());
     }
@@ -92,4 +145,7 @@ public abstract class Yamlist<T extends Flagable> {
         return (String) get(flag);
     }
 
+    public boolean getBoolean(T flag){
+        return (boolean) get(flag);
+    }
 }

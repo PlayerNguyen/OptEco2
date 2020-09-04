@@ -4,9 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
-public class ResultFilter {
+public class ResultFilter implements Iterable<HashMap<String, Object>> {
 
     private final List<HashMap<String, Object>> data = new ArrayList<>();
 
@@ -54,5 +55,10 @@ public class ResultFilter {
             throw new ArrayIndexOutOfBoundsException("Not exist any item in array!");
         }
         return data.get(0);
+    }
+
+    @Override
+    public Iterator<HashMap<String, Object>> iterator() {
+        return data.iterator();
     }
 }
