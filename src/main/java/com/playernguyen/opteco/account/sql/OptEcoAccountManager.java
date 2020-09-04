@@ -1,6 +1,5 @@
 package com.playernguyen.opteco.account.sql;
 
-import com.playernguyen.opteco.OptEco;
 import com.playernguyen.opteco.account.OptEcoAccount;
 import com.playernguyen.opteco.sql.SQLEstablishment;
 
@@ -12,6 +11,8 @@ public interface OptEcoAccountManager {
 
     boolean hasAccount(UUID uuid);
 
-    OptEcoAccount getAccountFromUUID();
+    OptEcoAccount getAccountFromUUID(UUID uniqueId);
+
+    String getAccountTable();
 
 }

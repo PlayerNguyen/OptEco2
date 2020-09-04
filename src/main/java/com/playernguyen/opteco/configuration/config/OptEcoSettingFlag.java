@@ -14,6 +14,7 @@ public enum  OptEcoSettingFlag implements Flagable {
 
     SQL_TABLE_PREFIX("SQL.Table.Prefix", "opteco_"),
     SQL_TABLE_ACCOUNT("SQL.Table.Account", "account"),
+    SQL_TABLE_TRANSACTION("SQL.Table.Transaction", "transaction"),
 
     SQL_SQLITE_FILENAME("SQL.SQLite.File", "database.sqlite"),
 

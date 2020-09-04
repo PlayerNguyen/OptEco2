@@ -24,6 +24,9 @@ SQL:
     # Account table name
     # to use for the list
     Account: 'account'
+    # Transaction table name
+    # to store transaction information
+    Transaction: 'transaction'
   # MySQL Setting data
   # Change this if you are using MySQL to storage data
   MySQL:

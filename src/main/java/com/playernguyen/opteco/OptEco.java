@@ -82,7 +82,7 @@ public class OptEco extends JavaPlugin {
                     try (Connection connection = establishment.openConnection()) {
                         PreparedStatement preparedStatement = connection.prepareStatement(String.format(
                             "CREATE TABLE %s (" +
-                                    "id INTEGER PRIMARY KEY," +
+                                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                                     "player VARCHAR NOT NULL," +
                                     "balance VARCHAR NOT NULL," +
                                     "uuid VARCHAR NOT NULL)",
@@ -94,18 +94,18 @@ public class OptEco extends JavaPlugin {
                     }
                 }
 
-                // Account setup
-                getLogger().info("[SQLite] Checking account table...");
-                if (!SQLUtil.SQLite.hasTable(establishment, getAccountTableName())) {
-                    getLogger().info("Trying to create new account table...");
+                // Transaction setup
+                getLogger().info("[SQLite] Checking transaction table...");
+                if (!SQLUtil.SQLite.hasTable(establishment, getTransactionTableName())) {
+                    getLogger().info("Trying to create new transaction table...");
                     try (Connection connection = establishment.openConnection()) {
                         PreparedStatement preparedStatement = connection.prepareStatement(String.format(
                                 "CREATE TABLE %s (" +
-                                        "id INTEGER PRIMARY KEY," +
-                                        "player VARCHAR NOT NULL," +
-                                        "balance VARCHAR NOT NULL," +
-                                        "uuid VARCHAR NOT NULL)",
-                                getAccountTableName()
+                                        "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                        "from_uuid VARCHAR NOT NULL," +
+                                        "amount VARCHAR NOT NULL," +
+                                        "to_uuid VARCHAR NOT NULL)",
+                                getTransactionTableName()
                         ));
 
                         // Create new table
@@ -185,5 +185,23 @@ public class OptEco extends JavaPlugin {
         return establishment.getPrefixedTable(
                 getSettingConfiguration().getString(OptEcoSettingFlag.SQL_TABLE_ACCOUNT)
         );
+    }
+
+    /**
+     * Get the transaction table name of SQL
+     * @return The transaction table name
+     */
+    public String getTransactionTableName() {
+        return establishment.getPrefixedTable(
+                getSettingConfiguration().getString(OptEcoSettingFlag.SQL_TABLE_TRANSACTION)
+        );
+    }
+
+    /**
+     * Establishment getter
+     * @return the Establishment which compatible with current storage type
+     */
+    public SQLEstablishment getEstablishment() {
+        return establishment;
     }
 }

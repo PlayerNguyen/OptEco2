@@ -1,6 +1,8 @@
 package com.playernguyen.opteco.account.sql;
 
+import com.playernguyen.opteco.OptEco;
 import com.playernguyen.opteco.account.OptEcoAccount;
+import com.playernguyen.opteco.account.OptEcoAccountStorage;
 import com.playernguyen.opteco.debugger.DebuggerProfiler;
 import com.playernguyen.opteco.sql.ResultFilter;
 import com.playernguyen.opteco.sql.SQLEstablishment;
@@ -8,6 +10,7 @@ import com.playernguyen.opteco.sql.SQLEstablishment;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class OptEcoDefaultAccountManager implements OptEcoAccountManager {
@@ -16,12 +19,15 @@ public class OptEcoDefaultAccountManager implements OptEcoAccountManager {
     private final String accountTable;
     private final DebuggerProfiler debuggerProfiler;
 
-    public OptEcoDefaultAccountManager(String accountTable,
-                                       DebuggerProfiler debuggerProfiler,
-                                       SQLEstablishment establishment) {
-        this.accountTable = accountTable;
-        this.debuggerProfiler = debuggerProfiler;
-        this.establishment = establishment;
+    public OptEcoDefaultAccountManager(OptEco optEco) {
+        this.accountTable = optEco.getAccountTableName();
+        this.debuggerProfiler = optEco.getDebuggerProfiler();
+        this.establishment = optEco.getEstablishment();
+    }
+
+    @Override
+    public String getAccountTable() {
+        return accountTable;
     }
 
     @Override
@@ -34,8 +40,8 @@ public class OptEcoDefaultAccountManager implements OptEcoAccountManager {
         try (Connection connection = getEstablishment().openConnection()) {
             // Prepare the connect
             String query = String.format(
-                    "SELECT * FROM `%s` WHERE `uuid`=?",
-                    getEstablishment().getPrefixedTable(accountTable)
+                    "SELECT * FROM %s WHERE uuid=?",
+                    getAccountTable()
             );
             debuggerProfiler.info("Trying to execute query: " + query);
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -51,7 +57,30 @@ public class OptEcoDefaultAccountManager implements OptEcoAccountManager {
     }
 
     @Override
-    public OptEcoAccount getAccountFromUUID() {
+    public OptEcoAccount getAccountFromUUID(UUID uniqueId) {
+
+        try (Connection connection = establishment.openConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(String.format(
+                    "SELECT * FROM %s WHERE uuid=?",
+                    getAccountTable()
+            ));
+
+            // Set parameter
+            preparedStatement.setString(1, uniqueId.toString());
+
+            // Getter
+            HashMap<String, Object> item =
+                    new ResultFilter(preparedStatement.executeQuery()).first();
+            // Return the getter
+            return new OptEcoAccountStorage(
+                    UUID.fromString((String) item.get("uuid")),
+                    (String) item.get("player"),
+                    (double) item.get("balance")
+            );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 }

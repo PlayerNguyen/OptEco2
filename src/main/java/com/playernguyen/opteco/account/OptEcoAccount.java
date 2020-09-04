@@ -1,13 +1,17 @@
 package com.playernguyen.opteco.account;
 
+import org.bukkit.OfflinePlayer;
+
 import java.util.UUID;
 
 public interface OptEcoAccount {
 
-    UUID getUniqueID();
+    UUID getUniqueId();
 
     double getCredit();
 
+    String getName();
 
+    OfflinePlayer getOfflinePlayer();
 
 }
