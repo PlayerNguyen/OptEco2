@@ -2,4 +2,8 @@ name: OptEco
 version: 2.0b
 main: com.playernguyen.opteco.OptEco
 api-version: 1.13
-
+commands:
+  point:
+    aliases: [p, pt]
+    usage: /point <sub-command>
+    description: OptEco command

@@ -8,23 +8,22 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.playernguyen.opteco.permission;
+package com.playernguyen.opteco.command;
 
 import com.playernguyen.opteco.manager.ManagerSet;
-import org.bukkit.command.CommandSender;
 
-public class PermissionManager extends ManagerSet<String> {
+import java.util.List;
+import java.util.stream.Collectors;
 
-    public boolean allow(CommandSender sender) {
-        if (sender.isOp()) return true;
-        for (String permission : getContainer()) {
-            if (sender.hasPermission(permission))
-                return true;
-        }
-        return false;
+public class SubCommandManager extends ManagerSet<SubCommand> {
+
+    public SubCommand findCommand(String command) {
+        return getContainer().stream().filter(e -> e.getCommand().equalsIgnoreCase(command))
+                .findAny().orElse(null);
     }
 
-    public void add(PermissionsEnum permissionsEnum) {
-        super.add(permissionsEnum.getPermission());
+    public List<String> asList() {
+        return getContainer().stream().map(Command::getCommand).collect(Collectors.toList());
     }
+
 }

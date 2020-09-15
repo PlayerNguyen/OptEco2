@@ -50,7 +50,7 @@ public class SpigotUpdater {
 
                 Bukkit.getConsoleSender()
                         .sendMessage(ChatColor.GOLD + "[OptEco]" +
-                                " Found new update ("+result+"), please download at " +
+                                " Found new update (" + result + "), please download at " +
                                 "https://www.spigotmc.org/resources/76179/...");
 
             } catch (IOException e) {

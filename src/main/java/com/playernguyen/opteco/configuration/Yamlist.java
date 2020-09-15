@@ -1,7 +1,6 @@
 package com.playernguyen.opteco.configuration;
 
 import com.playernguyen.opteco.OptEco;
-import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -28,14 +27,12 @@ public abstract class Yamlist<T extends Flagable> {
         // Initial the vars
         this.file = new File(_parent, name);
         this.fileConfiguration = YamlConfiguration.loadConfiguration(this.file);
-
         // Load flagable
         for (T flagable : flagables) {
             if (!this.fileConfiguration.contains(flagable.getPath())) {
-                this.fileConfiguration.addDefault(flagable.getPath(), flagable.getDefine());
+                this.fileConfiguration.set(flagable.getPath(), flagable.getDefine());
             }
         }
-
         // Save
         if (save) save();
     }
@@ -77,7 +74,7 @@ public abstract class Yamlist<T extends Flagable> {
         return fileConfiguration;
     }
 
-    private void save () {
+    private void save() {
         try {
             this.fileConfiguration.save(file);
         } catch (IOException e) {
@@ -98,7 +95,6 @@ public abstract class Yamlist<T extends Flagable> {
     }
 
     /**
-     *
      * @throws IOException Cannot save the file
      */
     private void reimport(String localName, String parent) throws IOException {
@@ -106,7 +102,7 @@ public abstract class Yamlist<T extends Flagable> {
         File _file = new File(optEco.getDataFolder(), "temp_save.yml");
         FileConfiguration configuration = YamlConfiguration.loadConfiguration(_file);
         Set<String> keys = this.getFileConfiguration().getKeys(true);
-        keys.forEach(e-> configuration.set(e, getFileConfiguration().get(e)));
+        keys.forEach(e -> configuration.set(e, getFileConfiguration().get(e)));
         configuration.save(_file);
 
         // Remove old setting
@@ -145,7 +141,7 @@ public abstract class Yamlist<T extends Flagable> {
         return (String) get(flag);
     }
 
-    public boolean getBoolean(T flag){
+    public boolean getBoolean(T flag) {
         return (boolean) get(flag);
     }
 }

@@ -2,9 +2,9 @@ package com.playernguyen.opteco.configuration.config;
 
 import com.playernguyen.opteco.configuration.Flagable;
 
-public enum  OptEcoSettingFlag implements Flagable {
+public enum OptEcoSettingFlag implements Flagable {
 
-    STORAGE_STORAGE_TYPE ("StorageType", "SQLite"),
+    STORAGE_STORAGE_TYPE("StorageType", "SQLite"),
 
     SQL_MYSQL_HOST("SQL.MySQL.Host", "localhost"),
     SQL_MYSQL_USERNAME("SQL.MySQL.Username", "root"),

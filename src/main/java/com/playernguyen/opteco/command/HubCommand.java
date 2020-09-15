@@ -8,23 +8,12 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.playernguyen.opteco.permission;
+package com.playernguyen.opteco.command;
 
-import com.playernguyen.opteco.manager.ManagerSet;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 
-public class PermissionManager extends ManagerSet<String> {
+public interface HubCommand extends Command, TabExecutor {
 
-    public boolean allow(CommandSender sender) {
-        if (sender.isOp()) return true;
-        for (String permission : getContainer()) {
-            if (sender.hasPermission(permission))
-                return true;
-        }
-        return false;
-    }
+    SubCommandManager getSubCommands();
 
-    public void add(PermissionsEnum permissionsEnum) {
-        super.add(permissionsEnum.getPermission());
-    }
 }

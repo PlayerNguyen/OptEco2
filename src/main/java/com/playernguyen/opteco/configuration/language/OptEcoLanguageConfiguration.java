@@ -1,13 +1,14 @@
 package com.playernguyen.opteco.configuration.language;
 
 import com.playernguyen.opteco.OptEco;
+import com.playernguyen.opteco.OptEcoConstants;
 import com.playernguyen.opteco.configuration.Yamlist;
 import org.bukkit.ChatColor;
 
 public class OptEcoLanguageConfiguration extends Yamlist<LanguageFlag> {
 
     public OptEcoLanguageConfiguration(OptEco optEco) {
-        super(optEco, "language.yml", LanguageFlag.values(), true, "");
+        super(optEco, OptEcoConstants.LANGUAGE_FILE_FILENAME, LanguageFlag.values(), true, "");
     }
 
     public String getLanguage(LanguageFlag languageFlag) {

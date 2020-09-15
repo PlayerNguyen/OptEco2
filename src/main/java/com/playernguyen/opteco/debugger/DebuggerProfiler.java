@@ -36,15 +36,15 @@ public class DebuggerProfiler {
         }
     }
 
-    public void info(String s, Object ...objects) {
+    public void info(String s, Object... objects) {
         log(ChatColor.DARK_GRAY + "[INFO]: " + s, objects);
     }
 
-    public void warn(String s, Object ...objects) {
+    public void warn(String s, Object... objects) {
         log(ChatColor.YELLOW + "[WARN]: " + s, objects);
     }
 
-    public void error(String s, Object ...objects) {
+    public void error(String s, Object... objects) {
         log(ChatColor.RED + "[ERROR]: " + s, objects);
     }
 

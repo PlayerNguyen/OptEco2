@@ -20,7 +20,7 @@ public class ResultFilter implements Iterable<HashMap<String, Object>> {
             HashMap<String, Object> mapBuilder = new HashMap<>();
             // Put data into the map
             for (int i = 0; i < columnCount; i++) {
-                String label = resultSet.getMetaData().getColumnLabel(i+1);
+                String label = resultSet.getMetaData().getColumnLabel(i + 1);
 
                 mapBuilder.put(label, resultSet.getObject(label));
             }
@@ -35,7 +35,7 @@ public class ResultFilter implements Iterable<HashMap<String, Object>> {
     }
 
     public int search(Object o) {
-        for (HashMap<String, Object> map: getData()){
+        for (HashMap<String, Object> map : getData()) {
             for (int i = 0; i < map.values().size(); i++) {
                 Object value = map.values().toArray()[i];
                 if (value.equals(o)) {

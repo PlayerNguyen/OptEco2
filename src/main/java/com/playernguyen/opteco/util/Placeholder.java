@@ -8,23 +8,34 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.playernguyen.opteco.permission;
+package com.playernguyen.opteco.util;
 
-import com.playernguyen.opteco.manager.ManagerSet;
-import org.bukkit.command.CommandSender;
+import java.util.HashMap;
+import java.util.Map;
 
-public class PermissionManager extends ManagerSet<String> {
+public class Placeholder {
 
-    public boolean allow(CommandSender sender) {
-        if (sender.isOp()) return true;
-        for (String permission : getContainer()) {
-            if (sender.hasPermission(permission))
-                return true;
+    public static class Builder {
+
+        private final String raw;
+        private final Map<String, String> map = new HashMap<>();
+
+        public Builder(String raw) {
+            this.raw = raw;
         }
-        return false;
+
+        public Builder add(String key, String data) {
+            map.put(key, data);
+            return this;
+        }
+
+        public String build() {
+            String _builder = raw;
+            for (String key : map.keySet()) {
+                _builder = _builder.replace(key, map.get(key));
+            }
+            return _builder;
+        }
     }
 
-    public void add(PermissionsEnum permissionsEnum) {
-        super.add(permissionsEnum.getPermission());
-    }
 }
