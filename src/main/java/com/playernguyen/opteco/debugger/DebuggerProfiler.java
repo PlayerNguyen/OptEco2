@@ -1,12 +1,11 @@
 package com.playernguyen.opteco.debugger;
 
 import com.playernguyen.opteco.OptEco;
-import com.playernguyen.opteco.OptEcoImplementation;
 import com.playernguyen.opteco.configuration.config.OptEcoSettingFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-public class DebuggerProfiler extends OptEcoImplementation {
+public class DebuggerProfiler {
 
     private final boolean enable;
 

@@ -13,13 +13,13 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class OptEcoDefaultAccountManager implements OptEcoAccountManager {
+public class OptEcoDefaultSQLAccount implements OptEcoSQLAccount {
 
     private final SQLEstablishment establishment;
     private final String accountTable;
     private final DebuggerProfiler debuggerProfiler;
 
-    public OptEcoDefaultAccountManager(OptEco optEco) {
+    public OptEcoDefaultSQLAccount(OptEco optEco) {
         this.accountTable = optEco.getAccountTableName();
         this.debuggerProfiler = optEco.getDebuggerProfiler();
         this.establishment = optEco.getEstablishment();
@@ -82,5 +82,10 @@ public class OptEcoDefaultAccountManager implements OptEcoAccountManager {
         }
 
         return null;
+    }
+
+    @Override
+    public void update(OptEcoAccount account) {
+
     }
 }

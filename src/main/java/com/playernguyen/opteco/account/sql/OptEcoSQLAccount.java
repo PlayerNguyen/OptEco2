@@ -5,7 +5,7 @@ import com.playernguyen.opteco.sql.SQLEstablishment;
 
 import java.util.UUID;
 
-public interface OptEcoAccountManager {
+public interface OptEcoSQLAccount {
 
     SQLEstablishment getEstablishment();
 
@@ -14,5 +14,8 @@ public interface OptEcoAccountManager {
     OptEcoAccount getAccountFromUUID(UUID uniqueId);
 
     String getAccountTable();
+
+    void update(OptEcoAccount account);
+
 
 }

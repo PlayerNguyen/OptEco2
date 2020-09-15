@@ -1,8 +1,16 @@
 package com.playernguyen.opteco;
 
+import com.playernguyen.opteco.account.OptEcoAccount;
+import com.playernguyen.opteco.account.OptEcoAccountManager;
+import com.playernguyen.opteco.account.OptEcoAccountPlayer;
+import com.playernguyen.opteco.account.sql.OptEcoDefaultSQLAccount;
+import com.playernguyen.opteco.account.sql.OptEcoSQLAccount;
 import com.playernguyen.opteco.configuration.config.OptEcoSettingConfiguration;
 import com.playernguyen.opteco.configuration.config.OptEcoSettingFlag;
+import com.playernguyen.opteco.configuration.language.OptEcoLanguageConfiguration;
 import com.playernguyen.opteco.debugger.DebuggerProfiler;
+import com.playernguyen.opteco.listener.OptEcoListenerManager;
+import com.playernguyen.opteco.listener.PlayerJoinListener;
 import com.playernguyen.opteco.sql.MySQLEstablishment;
 import com.playernguyen.opteco.sql.SQLEstablishment;
 import com.playernguyen.opteco.sql.SQLUtil;
@@ -28,6 +36,10 @@ public class OptEco extends JavaPlugin {
     protected OptEcoStorage storage;
     protected SQLEstablishment establishment;
     protected DebuggerProfiler debuggerProfiler;
+    protected OptEcoSQLAccount sqlAccount;
+    protected OptEcoListenerManager listenerManager;
+    protected OptEcoAccountManager accountManager;
+    protected OptEcoLanguageConfiguration languageConfiguration;
 
     @Override
     public void onEnable() {
@@ -41,8 +53,17 @@ public class OptEco extends JavaPlugin {
             // Load storage and database
             setupStorageAndDatabase();
 
+            // Load account manager
+            setupAccount();
+
+            // Load listener
+            setupListener();
+
             // Load update
             setupUpdater();
+
+            // Load language
+            setupLanguage();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,6 +72,44 @@ public class OptEco extends JavaPlugin {
             // Disable
             Bukkit.getPluginManager().disablePlugin(this);
         }
+    }
+
+    private void setupLanguage() {
+        getLogger().info("Loading languages bundle...");
+        this.languageConfiguration = new OptEcoLanguageConfiguration(this);
+    }
+
+    private void setupAccount() {
+        getLogger().info("Loading storage accounts...");
+        // SQL Manage class init
+        this.sqlAccount = new OptEcoDefaultSQLAccount(this);
+        // Manage the account class init
+        this.accountManager = new OptEcoAccountManager();
+        // If player reload, check
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                OptEcoAccount account;
+
+                // Whether not
+                if (!this.getSQLAccount().hasAccount(player.getUniqueId())) {
+                    // Create new account
+                    account = new OptEcoAccountPlayer(player.getUniqueId(), player.getName(), 0.0d);
+
+                } else {
+                    account = this.getSQLAccount().getAccountFromUUID(player.getUniqueId());
+                }
+
+                // Insert account
+                this.getAccountManager().add(account);
+            });
+        });
+    }
+
+    private void setupListener() {
+        getLogger().info("Loading listener...");
+        this.listenerManager = new OptEcoListenerManager(this);
+        // Add more here
+        getListenerManager().add(new PlayerJoinListener(this));
     }
 
     private void setupUpdater() {
@@ -204,4 +263,37 @@ public class OptEco extends JavaPlugin {
     public SQLEstablishment getEstablishment() {
         return establishment;
     }
+
+    /**
+     * Listener manager to manage the listener
+     * @return the {@link com.playernguyen.opteco.manager.Manager} to manage the listener
+     */
+    public OptEcoListenerManager getListenerManager() {
+        return listenerManager;
+    }
+
+    /**
+     * SQL Account to manage SQL
+     * @return SQL Account to manage SQL
+     */
+    public OptEcoSQLAccount getSQLAccount() {
+        return sqlAccount;
+    }
+
+    /**
+     * Manage the account
+     * @return {@link com.playernguyen.opteco.manager.Manager} class to contain account
+     */
+    public OptEcoAccountManager getAccountManager() {
+        return accountManager;
+    }
+
+    /**
+     * Language configuration
+     * @return The language hub
+     */
+    public OptEcoLanguageConfiguration getLanguageConfiguration() {
+        return languageConfiguration;
+    }
+
 }

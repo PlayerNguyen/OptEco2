@@ -1,6 +1,7 @@
 package com.playernguyen.opteco.manager;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -10,6 +11,10 @@ import java.util.Set;
 public class ManagerSet<T> implements Manager<T> {
 
     private final Set<T> container;
+
+    public ManagerSet() {
+        this.container = new HashSet<>();
+    }
 
     public ManagerSet(Set<T> container) {
         this.container = container;
